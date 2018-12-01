@@ -7,4 +7,5 @@
  */
 
 public class Fingerprint {
+    private int avgLoudness;
 }
