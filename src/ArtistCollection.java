@@ -3,7 +3,7 @@ import com.wrapper.spotify.model_objects.specification.ArtistSimplified;
 import java.util.ArrayList;
 
 public class ArtistCollection {
-    ArrayList<Artist> artists;
+    private ArrayList<Artist> artists;
 
     public ArtistCollection() {
 
@@ -13,11 +13,30 @@ public class ArtistCollection {
         this.artists = artists;
     }
 
-    public ArtistCollection(ArtistSimplified[] artistSimplifieds) {
+    public ArtistCollection(ArtistSimplified[] artistSimplifieds, User user) {
         this.artists = new ArrayList<>();
         for (ArtistSimplified artistSimplified : artistSimplifieds) {
-            this.artists.add(new Artist(artistSimplified));
+            boolean found = false;
+            try {
+                for (Artist artist : Shared.artists) {
+                    if (artist.getName().equals(artistSimplified.getName()) && artist.getUri().equals(artistSimplified.getUri())) {
+                        this.artists.add(artist);
+                        found = true;
+                    }
+                }
+            } catch (NullPointerException e) {}
+            if (!found) {
+                this.artists.add(new Artist(artistSimplified));
+            }
         }
+    }
+
+    public ArrayList<Artist> getArtists() {
+        return artists;
+    }
+
+    public void setArtists(ArrayList<Artist> artists) {
+        this.artists = artists;
     }
 
     @Override

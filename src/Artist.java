@@ -4,8 +4,9 @@ import com.wrapper.spotify.requests.data.artists.GetArtistRequest;
 public class Artist extends Item {
     private String[] genres;
 
-    public Artist(ArtistSimplified artist, User user) {
+    public Artist(ArtistSimplified artist) {
         super(artist.getName(), artist.getId(), artist.getUri());
+        Shared.artists.add(this);
     }
 
     public void findGenres(User user) {

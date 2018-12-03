@@ -23,13 +23,20 @@ public class CliMenu {
         boolean error = true;
         while (error) {
             error = false;
-            System.out.println((!isMultipleChoice) ? prompt : (prompt + " (Delimit multiple options with commas e.g. 1,3,4)"));
+            System.out.println((!isMultipleChoice) ? prompt : (prompt + " (Delimit multiple options with commas e.g. 1,3,4, or use * to select all)"));
             for (int i = 0; i < options.size(); i++) {
-                System.out.printf("[%d] %s\n", i + 1, options.get(i));
+                System.out.printf("[%d]\t" + ((i + 1 >= 10) ? "" : "\t") + "%s\n", i + 1, options.get(i));
             }
             System.out.print((isMultipleChoice) ? "Options: " : "Option: ");
             if (isMultipleChoice) {
                 String input = scanner.nextLine();
+                if (input.contains("*")) {
+                    ret = new int[options.size()];
+                    for (int i = 0; i < options.size(); i++) {
+                        ret[i] = i;
+                    }
+                    return ret;
+                }
                 if (input.equals("")) {
                     ret = new int[0];
                     return ret;

@@ -1,9 +1,6 @@
-import com.wrapper.spotify.model_objects.specification.AudioFeatures;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForSeveralTracksRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Main {
 
@@ -11,6 +8,9 @@ public class Main {
     private final static String clientSecret = "579ecc79d8944827b068f4956f337ec8";
 
     public static void main(String[] args) {
+        Shared.albums = new ArrayList<>();
+        Shared.tracks = new ArrayList<>();
+        Shared.artists = new ArrayList<>();
         //Authenticate, and create User object
         CliAuthDialog authDialog = new CliAuthDialog(clientId, clientSecret);
         //Create a new User object from the SpotifyApi that CliAuthDialog.run returns.
@@ -42,11 +42,14 @@ public class Main {
                 playlistsToUse.add(usersPlaylists.get(i));
             }
             System.out.println();
+
+
             //Prompt user to select albums from their library
             ArrayList<Album> usersAlbums = new ArrayList<>();
             ArrayList<String> usersAlbumStrings = new ArrayList<>();
             for (com.wrapper.spotify.model_objects.specification.Album album : usersSpotifyAlbums) {
-                usersAlbums.add(new Album(album, user));
+                Album a = new Album(album, user);
+                usersAlbums.add(a);
             }
             for (Album album : usersAlbums) {
                 usersAlbumStrings.add(album.toString());
@@ -60,7 +63,23 @@ public class Main {
             }
 
             //Combine all the tracks
-            System.out.println("Calculating your taste...");
+            System.out.println("\nCalculating your taste. This could take a minute.");
+
+
+            /*
+            This code finds tracks of playlists and albums, which in turn finds albums, artists, and genres for each.
+            EFFICIENCY TROUBLE SPOT!!!!!!!!
+             */
+            Timer t = new Timer(true);
+            for (Playlist playlist : playlistsToUse) {
+                playlist.findTracks(user);
+            }
+            for (Album album : albumsToUse) {
+                album.findTracks(user);
+            }
+            System.out.println("Track identification took " + t.end() + " milliseconds.");
+
+
             ArrayList<Track> tracksToUse = new ArrayList<>();
             for (Playlist playlist : playlistsToUse) {
                 tracksToUse.addAll(playlist.getTracks());

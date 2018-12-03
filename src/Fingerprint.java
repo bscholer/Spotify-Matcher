@@ -1,4 +1,6 @@
+import com.wrapper.spotify.exceptions.detailed.TooManyRequestsException;
 import com.wrapper.spotify.model_objects.specification.AudioFeatures;
+import com.wrapper.spotify.requests.data.artists.GetSeveralArtistsRequest;
 import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForSeveralTracksRequest;
 
 import java.io.Serializable;
@@ -35,15 +37,57 @@ public class Fingerprint implements Serializable {
 
     public Fingerprint(ArrayList<Track> tracks, User user) {
         this.username = user.getUsername();
+        ArrayList<Artist> artists = new ArrayList<>();
         for (Track track : tracks) {
-            //TODO Add artist genre stuff here
+            ArtistCollection collection = track.getArtists();
+            artists.addAll(collection.getArtists());
         }
+        System.out.println("Before removing dups: " + artists.size());
+        System.out.println("Size of Shared.artists: " + Shared.artists.size());
+        Timer t = new Timer(true);
+        //Hopefully a more efficient way of getting genres.
+        for (int i = 0; i < Shared.artists.size() / 50; i++) {
+            System.out.println(i * 50);
+            String ids[] = new String[Shared.artists.size() % 50];
+            for (int j = 0; j < ids.length; j++) {
+                ids[j] = Shared.artists.get(j + (i * 50)).getId();
+            }
+            GetSeveralArtistsRequest getSeveralArtistsRequest = user.getSpotifyApi()
+                    .getSeveralArtists(ids)
+                    .build();
+            try {
+                com.wrapper.spotify.model_objects.specification.Artist[] fullArtists = getSeveralArtistsRequest.execute();
+                for (int j = i * 50; j < ids.length + (i * 50); j++) {
+                    for (com.wrapper.spotify.model_objects.specification.Artist artist : fullArtists) {
+                        if (Shared.artists.get(j) != null && Shared.artists.get(j).getUri().equals(artist.getUri())) {
+                            Shared.artists.get(j).setGenres(artist.getGenres());
+                        }
+                    }
+                    //Shared.artists.get(j).findGenres(user);
+                }
+            } catch (TooManyRequestsException e) {
+                try {
+                    i--;
+                    Thread.sleep(1000 * e.getRetryAfter() + 100);
+                } catch (Exception ex) {
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                for (int j = i * 50; j < ids.length + (i * 50); j++) {
+                    Shared.artists.get(j).findGenres(user);
+                }
+            }
+        }
+        System.out.println("Finding genres took " + t.end() + " milliseconds");
+
         ArrayList<AudioFeatures> audioFeatures = new ArrayList<>();
         for (int i = 0; i < tracks.size() / 100; i++) {
             String[] ids = new String[tracks.size() % 100];
             for (int j = 0; j < ids.length; j++) {
                 ids[j] = tracks.get(j + (i * 100)).getId();
             }
+            ApiCalls.getAudioFeatures(ids, user);
             GetAudioFeaturesForSeveralTracksRequest gaffstr = user.getSpotifyApi()
                     .getAudioFeaturesForSeveralTracks(ids)
                     .build();

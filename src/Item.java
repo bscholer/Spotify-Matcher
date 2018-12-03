@@ -6,6 +6,12 @@ public class Item {
     public Item() {
     }
 
+    public Item(String name, String id, String uri) {
+        this.name = name;
+        this.id = id;
+        this.uri = uri;
+    }
+
     public String getName() {
         return name;
     }
@@ -30,9 +36,17 @@ public class Item {
         this.uri = uri;
     }
 
-    public Item(String name, String id, String uri) {
-        this.name = name;
-        this.id = id;
-        this.uri = uri;
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Artist) {
+            Artist a = (Artist) o;
+            if (this.name.equals(a.getName()) && this.uri.equals(a.getUri())) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

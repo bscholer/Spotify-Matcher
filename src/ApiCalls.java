@@ -1,9 +1,9 @@
 import com.wrapper.spotify.model_objects.specification.Album;
-import com.wrapper.spotify.model_objects.specification.Paging;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-import com.wrapper.spotify.model_objects.specification.SavedAlbum;
+import com.wrapper.spotify.model_objects.specification.*;
 import com.wrapper.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
 import com.wrapper.spotify.requests.data.playlists.GetListOfUsersPlaylistsRequest;
+import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForSeveralTracksRequest;
+import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForTrackRequest;
 
 public class ApiCalls {
     static PlaylistSimplified[] getUsersPlaylists(User user) {
@@ -38,4 +38,29 @@ public class ApiCalls {
         }
         return null;
     }
+
+    static AudioFeatures getAudioFeatures(String id, User user) {
+        GetAudioFeaturesForTrackRequest gafftr = user.getSpotifyApi()
+                .getAudioFeaturesForTrack(id)
+                .build();
+        try {
+            AudioFeatures features = gafftr.execute();
+            return features;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    static AudioFeatures[] getAudioFeatures(String[] ids, User user) {
+        GetAudioFeaturesForSeveralTracksRequest gaffstr = user.getSpotifyApi()
+                .getAudioFeaturesForSeveralTracks(ids)
+                .build();
+        try {
+            AudioFeatures[] features = gaffstr.execute();
+            return features;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
