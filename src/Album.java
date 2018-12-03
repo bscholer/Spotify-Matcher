@@ -5,8 +5,8 @@ import com.wrapper.spotify.requests.data.albums.GetAlbumsTracksRequest;
 import java.util.ArrayList;
 
 public class Album extends Item {
-    ArtistCollection artists;
-    ArrayList<Track> tracks;
+    private ArtistCollection artists;
+    private ArrayList<Track> tracks;
 
     public Album() {
         super();
@@ -42,7 +42,22 @@ public class Album extends Item {
 
     @Override
     public String toString() {
-        return String.format("%s by %s", this.name, this.artists.toString());
+        return String.format("%s by %s with %d songs", this.name, this.artists.toString(), tracks.size());
     }
 
+    public ArtistCollection getArtists() {
+        return artists;
+    }
+
+    public void setArtists(ArtistCollection artists) {
+        this.artists = artists;
+    }
+
+    public ArrayList<Track> getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(ArrayList<Track> tracks) {
+        this.tracks = tracks;
+    }
 }

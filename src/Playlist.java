@@ -9,16 +9,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Playlist extends Item {
-    String owner;
-    ArrayList<Track> tracks;
+    private String owner;
+    private ArrayList<Track> tracks;
 
     public Playlist() {
         super();
     }
 
+    //TODO delete this if it doesn't need to be used
     public Playlist(com.wrapper.spotify.model_objects.specification.Playlist playlist) {
         super();
-
     }
 
     public Playlist(PlaylistSimplified playlist, User user) {

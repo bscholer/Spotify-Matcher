@@ -30,6 +30,10 @@ public class CliMenu {
             System.out.print((isMultipleChoice) ? "Options: " : "Option: ");
             if (isMultipleChoice) {
                 String input = scanner.nextLine();
+                if (input.equals("")) {
+                    ret = new int[0];
+                    return ret;
+                }
                 //Separate options
                 String[] optionStrs = input.split(",");
                 ret = new int[optionStrs.length];
@@ -51,6 +55,10 @@ public class CliMenu {
                 }
             } else {
                 String input = scanner.nextLine();
+                if (input.equals("")) {
+                    ret = new int[0];
+                    return ret;
+                }
                 ret = new int[1];
                 if (input.contains(",")) {
                     error = true;

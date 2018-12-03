@@ -1,23 +1,23 @@
 public class Track extends Item {
-    Artist artist;
-    Album album;
+    private ArtistCollection artists;
+    private Album album;
 
     public Track() {
         super();
     }
 
-    public Track(String name, String id, String uri, Artist artist, Album album) {
+    public Track(String name, String id, String uri, ArtistCollection artists, Album album) {
         super(name, id, uri);
-        this.artist = artist;
+        this.artists = artists;
         this.album = album;
     }
 
-    public Artist getArtist() {
-        return artist;
+    public ArtistCollection getArtists() {
+        return artists;
     }
 
-    public void setArtist(Artist artist) {
-        this.artist = artist;
+    public void setArtists(ArtistCollection artists) {
+        this.artists = artists;
     }
 
     public Album getAlbum() {

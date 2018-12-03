@@ -1,6 +1,9 @@
+import com.wrapper.spotify.model_objects.specification.AudioFeatures;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
+import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForSeveralTracksRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
@@ -16,10 +19,13 @@ public class Main {
         if (user.getSpotifyApi() != null && user.getUsername() != null) {
             System.out.printf("\nWelcome, %s!\n\n", user.getUsername());
         }
+
         //Generate the user's fingerprint
         if (user.getFingerprint() == null) {
-            //Prompt user to select playlists from their library
+            System.out.println("Gathering your data...");
             PlaylistSimplified[] usersPlaylistSimps = ApiCalls.getUsersPlaylists(user);
+            com.wrapper.spotify.model_objects.specification.Album[] usersSpotifyAlbums = ApiCalls.getUsersAlbums(user);
+            //Prompt user to select playlists from their library
             ArrayList<Playlist> usersPlaylists = new ArrayList<>();
             ArrayList<String> usersPlaylistStrings = new ArrayList<>();
             for (PlaylistSimplified play : usersPlaylistSimps) {
@@ -28,7 +34,8 @@ public class Main {
             for (Playlist playlist : usersPlaylists) {
                 usersPlaylistStrings.add(playlist.toString());
             }
-            CliMenu playlistSelection = new CliMenu(usersPlaylistStrings, "Select the playlists from your library to use to calculate your taste", true);
+            CliMenu playlistSelection = new CliMenu(usersPlaylistStrings,
+                    "Select the playlists from your library to use to calculate your taste", true);
             int[] selections = playlistSelection.run();
             ArrayList<Playlist> playlistsToUse = new ArrayList<>();
             for (int i : selections) {
@@ -36,7 +43,6 @@ public class Main {
             }
             System.out.println();
             //Prompt user to select albums from their library
-            com.wrapper.spotify.model_objects.specification.Album[] usersSpotifyAlbums = ApiCalls.getUsersAlbums(user);
             ArrayList<Album> usersAlbums = new ArrayList<>();
             ArrayList<String> usersAlbumStrings = new ArrayList<>();
             for (com.wrapper.spotify.model_objects.specification.Album album : usersSpotifyAlbums) {
@@ -45,12 +51,25 @@ public class Main {
             for (Album album : usersAlbums) {
                 usersAlbumStrings.add(album.toString());
             }
-            CliMenu albumSelection = new CliMenu(usersAlbumStrings, "Select the albums from your library to use to calculate your taste", true);
+            CliMenu albumSelection = new CliMenu(usersAlbumStrings,
+                    "Select the albums from your library to use to calculate your taste", true);
             selections = albumSelection.run();
             ArrayList<Album> albumsToUse = new ArrayList<>();
             for (int i : selections) {
                 albumsToUse.add(usersAlbums.get(i));
             }
+
+            //Combine all the tracks
+            System.out.println("Calculating your taste...");
+            ArrayList<Track> tracksToUse = new ArrayList<>();
+            for (Playlist playlist : playlistsToUse) {
+                tracksToUse.addAll(playlist.getTracks());
+            }
+            for (Album album : albumsToUse) {
+                tracksToUse.addAll(album.getTracks());
+            }
+            Fingerprint fingerprint = new Fingerprint(tracksToUse, user);
+            user.setFingerprint(fingerprint);
         }
     }
 }
