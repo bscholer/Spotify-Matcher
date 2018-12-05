@@ -18,6 +18,11 @@ public class Playlist extends Item {
         super();
     }
 
+    public Playlist(String name, String id, String uri, int length) {
+        super(name, id, uri);
+        this.length = length;
+    }
+
     //TODO delete this if it doesn't need to be used
     public Playlist(com.wrapper.spotify.model_objects.specification.Playlist playlist) {
         super();
@@ -82,6 +87,10 @@ public class Playlist extends Item {
         } catch (NullPointerException e) {
             return this.length;
         }
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 
     @Override

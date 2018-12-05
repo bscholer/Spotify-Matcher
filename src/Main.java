@@ -48,6 +48,7 @@ public class Main {
             ArrayList<Album> usersAlbums = new ArrayList<>();
             ArrayList<String> usersAlbumStrings = new ArrayList<>();
             for (com.wrapper.spotify.model_objects.specification.Album album : usersSpotifyAlbums) {
+                if (album == null) continue;
                 Album a = new Album(album, user);
                 usersAlbums.add(a);
             }
@@ -88,7 +89,17 @@ public class Main {
                 tracksToUse.addAll(album.getTracks());
             }
             Fingerprint fingerprint = new Fingerprint(tracksToUse, user);
+            Playlist rapCaviar = new Playlist("RapCaviar", "37i9dQZF1DX0XUsuxWHRQd", "spotify:user:spotify:playlist:37i9dQZF1DX0XUsuxWHRQd", 50);
+            rapCaviar.findTracks(user);
+            Fingerprint rapCaviarFingerprint = new Fingerprint(rapCaviar.getTracks(), user);
+            for (Track track : rapCaviar.getTracks()) {
+                System.out.println(track.getName());
+            }
+            System.out.println(rapCaviar.getTracks().size());
+            System.out.println(rapCaviarFingerprint.toString());
+            System.out.println(fingerprint.toString());
             user.setFingerprint(fingerprint);
+            System.out.println("SCORE: " + Fingerprint.findMatch(user, rapCaviarFingerprint));
         }
     }
 }

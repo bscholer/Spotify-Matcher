@@ -1,4 +1,6 @@
-public class Item {
+import java.awt.event.ItemEvent;
+
+public class Item implements ItemTemplate {
     protected String name;
     protected String id;
     protected String uri;
