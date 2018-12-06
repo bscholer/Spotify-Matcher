@@ -117,18 +117,18 @@ public class Fingerprint implements Serializable {
                         tier3Genres.add(k.getKey());
                     }
                 });
-        System.out.println("*******TIER 1********");
-        for (String s : tier1Genres) {
-            System.out.println(s);
-        }
-        System.out.println("*******TIER 2********");
-        for (String s : tier2Genres) {
-            System.out.println(s);
-        }
-        System.out.println("*******TIER 3********");
-        for (String s : tier3Genres) {
-            System.out.println(s);
-        }
+//        System.out.println("*******TIER 1********");
+//        for (String s : tier1Genres) {
+//            System.out.println(s);
+//        }
+//        System.out.println("*******TIER 2********");
+//        for (String s : tier2Genres) {
+//            System.out.println(s);
+//        }
+//        System.out.println("*******TIER 3********");
+//        for (String s : tier3Genres) {
+//            System.out.println(s);
+//        }
         System.out.println("Finding genres took " + t.end() + " milliseconds");
 
         t.reset();
@@ -321,8 +321,45 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
             audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.TEMPO_WEIGHT;
         }
-        System.out.println(audioFeaturesMatch);
-        return audioFeaturesMatch;
+        float genreMatch = 100;
+        /*For genre in fingerprint.tier1
+            find total of genres in the fingerprintToMatch that are in tier1
+          find percentage that the total represents
+          deduct percentage * DEDUCTION
+
+         */
+        double tier1Total = 0;
+        double tier2Total = 0;
+        double tier3Total = 0;
+
+        for (String genre : fingerprint.tier1Genres) {
+            if (fingerprintToMatch.tier1Genres.contains(genre)) {
+                tier1Total++;
+            }
+        }
+        System.out.println("STUFF");
+        System.out.println(1 - tier1Total / fingerprint.tier1Genres.size());
+        genreMatch -= (1 - tier1Total / fingerprint.tier1Genres.size()) * fingerprint.TIER_1_DEDUCTION;
+
+        for (String genre : fingerprint.tier2Genres) {
+            if (fingerprintToMatch.tier2Genres.contains(genre)) {
+                tier2Total++;
+            }
+        }
+        System.out.println(1 - tier2Total / fingerprint.tier2Genres.size());
+        genreMatch -= (1 - tier2Total / fingerprint.tier2Genres.size()) * fingerprint.TIER_2_DEDUCTION;
+
+        for (String genre : fingerprint.tier3Genres) {
+            if (fingerprintToMatch.tier3Genres.contains(genre)) {
+                tier3Total++;
+            }
+        }
+        System.out.println(1 - tier3Total / fingerprint.tier3Genres.size());
+        genreMatch -= (1 - tier3Total / fingerprint.tier3Genres.size()) * fingerprint.TIER_3_DEDUCTION;
+
+        System.out.println("AUDIO FEATURE MATCH: " + audioFeaturesMatch);
+        System.out.println("GENRE MATCH: " + genreMatch);
+        return (audioFeaturesMatch * fingerprint.AUDIO_FEATURES_WEIGHT) + (genreMatch * fingerprint.GENRE_WEIGHT);
     }
 
     private double calculateAvg(float numArray[]) {

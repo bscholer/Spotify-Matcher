@@ -103,11 +103,11 @@ public class Main {
             Fingerprint rapCaviarFingerprint = new Fingerprint(tracks, user);
 
             for (Track track : rapCaviar.getTracks()) {
-                System.out.println(track.getName());
+//                System.out.println(track.getName());
             }
-            System.out.println(rapCaviar.getTracks().size());
-            System.out.println(rapCaviarFingerprint.toString());
-            System.out.println(fingerprint.toString());
+//            System.out.println(rapCaviar.getTracks().size());
+//            System.out.println(rapCaviarFingerprint.toString());
+//            System.out.println(fingerprint.toString());
             user.setFingerprint(fingerprint);
             System.out.println("SCORE: " + Fingerprint.findMatch(user, rapCaviarFingerprint));
         }
