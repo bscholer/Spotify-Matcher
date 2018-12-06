@@ -4,9 +4,7 @@ import com.wrapper.spotify.requests.data.artists.GetSeveralArtistsRequest;
 import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForSeveralTracksRequest;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * The fingerprint class contains data about a certain user's music taste, and will be used by the various Match classes
@@ -17,22 +15,21 @@ import java.util.HashMap;
  */
 
 public class Fingerprint implements Serializable {
-    public final double TIER_1_PERCENT = 0.15;
-    public final double TIER_2_PERCENT = 0.30;
-    public final double TIER_3_PERCENT = 1 - TIER_1_PERCENT - TIER_2_PERCENT;
-    public final int TIER_1_DEDUCTION = 40;
-    public final int TIER_2_DEDUCTION = 20;
-    public final int TIER_3_DEDUCTION = 5;
-    public final double DANCEABILITY_WEIGHT = 1 / 6.0;
-    public final double ENERGY_WEIGHT = 1 / 6.0;
-    public final double SPEECHINESS_WEIGHT = 1 / 6.0;
-    public final double ACOUSTICNESS_WEIGHT = 1 / 6.0;
-    public final double LIVELINESS_WEIGHT = 1 / 6.0;
-    public final double TEMPO_WEIGHT = 1 / 6.0;
-    public final double AUDIO_FEATURES_WEIGHT = 0.7;
-    public final double GENRE_WEIGHT = 1 - AUDIO_FEATURES_WEIGHT;
+    public final transient double TIER_1_PERCENT = 0.15;
+    public final transient double TIER_2_PERCENT = 0.30;
+    public final transient double TIER_3_PERCENT = 1 - TIER_1_PERCENT - TIER_2_PERCENT;
+    public final transient int TIER_1_DEDUCTION = 40;
+    public final transient int TIER_2_DEDUCTION = 20;
+    public final transient int TIER_3_DEDUCTION = 5;
+    public final transient double DANCEABILITY_WEIGHT = 1 / 6.0;
+    public final transient double ENERGY_WEIGHT = 1 / 6.0;
+    public final transient double SPEECHINESS_WEIGHT = 1 / 6.0;
+    public final transient double ACOUSTICNESS_WEIGHT = 1 / 6.0;
+    public final transient double LIVELINESS_WEIGHT = 1 / 6.0;
+    public final transient double TEMPO_WEIGHT = 1 / 6.0;
+    public final transient double AUDIO_FEATURES_WEIGHT = 0.7;
+    public final transient double GENRE_WEIGHT = 1 - AUDIO_FEATURES_WEIGHT;
 
-    private String username;
     private double danceabilityAvg;
     private double danceabilityStDev;
     private double energyAvg;
@@ -45,6 +42,7 @@ public class Fingerprint implements Serializable {
     private double livelinessStDev;
     private double tempoAvg;
     private double tempoStDev;
+    private Date dateCreated;
     private HashMap<String, Integer> genres;
     private ArrayList<String> tier1Genres;
     private ArrayList<String> tier2Genres;
@@ -54,11 +52,11 @@ public class Fingerprint implements Serializable {
     }
 
     public Fingerprint(ArrayList<Track> tracks, User user) {
+        dateCreated = Calendar.getInstance().getTime();
         tier1Genres = new ArrayList<>();
         tier2Genres = new ArrayList<>();
         tier3Genres = new ArrayList<>();
         genres = new HashMap<>();
-        this.username = user.getUsername();
         ArrayList<Artist> artists = new ArrayList<>();
         for (Track track : tracks) {
             ArtistCollection collection = track.getArtists();
@@ -117,19 +115,7 @@ public class Fingerprint implements Serializable {
                         tier3Genres.add(k.getKey());
                     }
                 });
-//        System.out.println("*******TIER 1********");
-//        for (String s : tier1Genres) {
-//            System.out.println(s);
-//        }
-//        System.out.println("*******TIER 2********");
-//        for (String s : tier2Genres) {
-//            System.out.println(s);
-//        }
-//        System.out.println("*******TIER 3********");
-//        for (String s : tier3Genres) {
-//            System.out.println(s);
-//        }
-        System.out.println("Finding genres took " + t.end() + " milliseconds");
+//        System.out.println("Finding genres took " + t.end() + " milliseconds");
 
         t.reset();
         t.start();
@@ -156,7 +142,7 @@ public class Fingerprint implements Serializable {
                 e.printStackTrace();
             }
         }
-        System.out.println("Finding audio features took " + t.end() + " milliseconds");
+//        System.out.println("Finding audio features took " + t.end() + " milliseconds");
 
         float[] danceability = new float[audioFeatures.size()];
         float[] energy = new float[audioFeatures.size()];
@@ -246,7 +232,6 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
             audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.DANCEABILITY_WEIGHT;
         }
-        System.out.println(audioFeaturesMatch);
         //Energy
         if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * FIRST_STDEV_DIVISION_SIZE) &&
                 fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * FIRST_STDEV_DIVISION_SIZE)) {
@@ -261,7 +246,6 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
             audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.ENERGY_WEIGHT;
         }
-        System.out.println(audioFeaturesMatch);
         //Speechiness
         if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * FIRST_STDEV_DIVISION_SIZE) &&
                 fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * FIRST_STDEV_DIVISION_SIZE)) {
@@ -276,7 +260,6 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
             audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.SPEECHINESS_WEIGHT;
         }
-        System.out.println(audioFeaturesMatch);
         //Acousticness
         if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * FIRST_STDEV_DIVISION_SIZE) &&
                 fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * FIRST_STDEV_DIVISION_SIZE)) {
@@ -291,7 +274,6 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
             audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
         }
-        System.out.println(audioFeaturesMatch);
         //Liveliness
         if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * FIRST_STDEV_DIVISION_SIZE) &&
                 fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * FIRST_STDEV_DIVISION_SIZE)) {
@@ -306,7 +288,6 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
             audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.LIVELINESS_WEIGHT;
         }
-        System.out.println(audioFeaturesMatch);
         //Tempo
         if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * FIRST_STDEV_DIVISION_SIZE) &&
                 fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * FIRST_STDEV_DIVISION_SIZE)) {
@@ -337,8 +318,6 @@ public class Fingerprint implements Serializable {
                 tier1Total++;
             }
         }
-        System.out.println("STUFF");
-        System.out.println(1 - tier1Total / fingerprint.tier1Genres.size());
         genreMatch -= (1 - tier1Total / fingerprint.tier1Genres.size()) * fingerprint.TIER_1_DEDUCTION;
 
         for (String genre : fingerprint.tier2Genres) {
@@ -346,7 +325,6 @@ public class Fingerprint implements Serializable {
                 tier2Total++;
             }
         }
-        System.out.println(1 - tier2Total / fingerprint.tier2Genres.size());
         genreMatch -= (1 - tier2Total / fingerprint.tier2Genres.size()) * fingerprint.TIER_2_DEDUCTION;
 
         for (String genre : fingerprint.tier3Genres) {
@@ -354,11 +332,8 @@ public class Fingerprint implements Serializable {
                 tier3Total++;
             }
         }
-        System.out.println(1 - tier3Total / fingerprint.tier3Genres.size());
         genreMatch -= (1 - tier3Total / fingerprint.tier3Genres.size()) * fingerprint.TIER_3_DEDUCTION;
 
-        System.out.println("AUDIO FEATURE MATCH: " + audioFeaturesMatch);
-        System.out.println("GENRE MATCH: " + genreMatch);
         return (audioFeaturesMatch * fingerprint.AUDIO_FEATURES_WEIGHT) + (genreMatch * fingerprint.GENRE_WEIGHT);
     }
 
@@ -370,14 +345,6 @@ public class Fingerprint implements Serializable {
         return sum / numArray.length;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public double getDanceabilityAvg() {
         return danceabilityAvg;
     }
@@ -385,20 +352,19 @@ public class Fingerprint implements Serializable {
     @Override
     public String toString() {
         return "Fingerprint{" +
-                "username='" + username + '\'' +
-                ", danceabilityAvg=" + danceabilityAvg +
-                ", danceabilityStDev=" + danceabilityStDev +
-                ", energyAvg=" + energyAvg +
-                ", energyStDev=" + energyStDev +
-                ", speechinessAvg=" + speechinessAvg +
-                ", speechinessStDev=" + speechinessStDev +
-                ", acousticnessAvg=" + acousticnessAvg +
-                ", acousticnessStDev=" + acousticnessStDev +
-                ", livelinessAvg=" + livelinessAvg +
-                ", livelinessStDev=" + livelinessStDev +
-                ", tempoAvg=" + tempoAvg +
-                ", tempoStDev=" + tempoStDev +
-                '}';
+                "\ndanceabilityAvg=" + danceabilityAvg +
+                "\ndanceabilityStDev=" + danceabilityStDev +
+                "\nenergyAvg=" + energyAvg +
+                "\nenergyStDev=" + energyStDev +
+                "\nspeechinessAvg=" + speechinessAvg +
+                "\nspeechinessStDev=" + speechinessStDev +
+                "\nacousticnessAvg=" + acousticnessAvg +
+                "\nacousticnessStDev=" + acousticnessStDev +
+                "\nlivelinessAvg=" + livelinessAvg +
+                "\nlivelinessStDev=" + livelinessStDev +
+                "\ntempoAvg=" + tempoAvg +
+                "\ntempoStDev=" + tempoStDev +
+                "\n}";
     }
 
     public double getDanceabilityStDev() {
@@ -473,5 +439,9 @@ public class Fingerprint implements Serializable {
     public void setTempo(double avg, double stDev) {
         this.tempoAvg = avg;
         this.tempoStDev = stDev;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
     }
 }

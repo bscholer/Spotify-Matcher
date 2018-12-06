@@ -8,3 +8,5 @@ out/production/SpotifyMatcher/
 *.iml
 
 auth
+
+user\.ser

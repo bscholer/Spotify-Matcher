@@ -1,5 +1,12 @@
 import com.wrapper.spotify.SpotifyApi;
+import com.wrapper.spotify.SpotifyHttpManager;
 import com.wrapper.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.net.URI;
 
 /**
  * The User class is aimed towards being a parent class for both Spotify and Twitter user classes.
@@ -9,14 +16,12 @@ import com.wrapper.spotify.requests.data.users_profile.GetCurrentUsersProfileReq
  * @since 2018-10-26
  */
 
-public class User {
+public class User implements Serializable {
 
     protected String username;
-    //    protected String firstName;
-//    protected String lastName;
-//    protected String email;
-    protected SpotifyApi spotifyApi;
+    protected transient SpotifyApi spotifyApi;
     protected Fingerprint fingerprint;
+    private String refreshToken;
 
     public User() {
     }
@@ -52,6 +57,14 @@ public class User {
         }
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
     public void setSpotifyApi(SpotifyApi spotifyApi) {
         this.spotifyApi = spotifyApi;
     }
@@ -62,5 +75,29 @@ public class User {
 
     public Fingerprint getFingerprint() {
         return fingerprint;
+    }
+
+    public static User loadUser(String fileName) {
+        User user;
+        File authFile = new File(fileName);
+        //Auth file exists
+        if (authFile.exists()) {
+            try {
+                FileInputStream inputStream = new FileInputStream(fileName);
+                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                user = (User) objectInputStream.readObject();
+            } catch (Exception e) {
+                user = null;
+                new File(fileName).delete();
+            }
+        } else {
+            user = null;
+        }
+        return user;
+    }
+
+    @Override
+    public String toString() {
+        return this.username;
     }
 }
