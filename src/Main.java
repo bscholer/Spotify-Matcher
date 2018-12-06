@@ -90,8 +90,18 @@ public class Main {
             }
             Fingerprint fingerprint = new Fingerprint(tracksToUse, user);
             Playlist rapCaviar = new Playlist("RapCaviar", "37i9dQZF1DX0XUsuxWHRQd", "spotify:user:spotify:playlist:37i9dQZF1DX0XUsuxWHRQd", 50);
+            Playlist mostNecessary = new Playlist("Most Necessary", "37i9dQZF1DX2RxBh64BHjQ", "spotify:user:spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", 50);
             rapCaviar.findTracks(user);
-            Fingerprint rapCaviarFingerprint = new Fingerprint(rapCaviar.getTracks(), user);
+            mostNecessary.findTracks(user);
+            ArrayList<Track> tracks = new ArrayList<>();
+            for (Track track : rapCaviar.getTracks()) {
+                tracks.add(track);
+            }
+            for (Track track : mostNecessary.getTracks()) {
+                tracks.add(track);
+            }
+            Fingerprint rapCaviarFingerprint = new Fingerprint(tracks, user);
+
             for (Track track : rapCaviar.getTracks()) {
                 System.out.println(track.getName());
             }

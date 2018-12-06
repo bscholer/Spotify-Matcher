@@ -223,14 +223,14 @@ public class Fingerprint implements Serializable {
      */
     public static double findMatch(User user, Fingerprint fingerprintToMatch) {
         final int HALF_STDEV_SCORE = 100;
-        final int ONE_STDEV_SCORE = 90;
-        final int ONE_AND_HALF_STDEV_SCORE = 75;
-        final int TWO_STDEV_SCORE = 50;
+        final int ONE_STDEV_SCORE = 80;
+        final int ONE_AND_HALF_STDEV_SCORE = 65;
+        final int TWO_STDEV_SCORE = 40;
         double audioFeaturesMatch = 0;
         Fingerprint fingerprint = user.getFingerprint();
         //Danceability
-        if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * 0.5) &&
-                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 0.5)) {
+        if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * 0.25) &&
+                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 0.25)) {
             audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.DANCEABILITY_WEIGHT;
         } else if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * 1) &&
                 fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 1)) {
@@ -242,9 +242,10 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 2)) {
             audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.DANCEABILITY_WEIGHT;
         }
+        System.out.println(audioFeaturesMatch);
         //Energy
-        if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * 0.5) &&
-                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 0.5)) {
+        if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * 0.25) &&
+                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 0.25)) {
             audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.ENERGY_WEIGHT;
         } else if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * 1) &&
                 fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 1)) {
@@ -256,9 +257,10 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 2)) {
             audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.ENERGY_WEIGHT;
         }
+        System.out.println(audioFeaturesMatch);
         //Speechiness
-        if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * 0.5) &&
-                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 0.5)) {
+        if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * 0.25) &&
+                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 0.25)) {
             audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.SPEECHINESS_WEIGHT;
         } else if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * 1) &&
                 fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 1)) {
@@ -270,9 +272,10 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 2)) {
             audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.SPEECHINESS_WEIGHT;
         }
+        System.out.println(audioFeaturesMatch);
         //Acousticness
-        if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * 0.5) &&
-                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 0.5)) {
+        if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * 0.25) &&
+                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 0.25)) {
             audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
         } else if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * 1) &&
                 fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 1)) {
@@ -284,9 +287,10 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 2)) {
             audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
         }
+        System.out.println(audioFeaturesMatch);
         //Liveliness
-        if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * 0.5) &&
-                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 0.5)) {
+        if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * 0.25) &&
+                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 0.25)) {
             audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.LIVELINESS_WEIGHT;
         } else if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * 1) &&
                 fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 1)) {
@@ -298,9 +302,10 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 2)) {
             audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.LIVELINESS_WEIGHT;
         }
+        System.out.println(audioFeaturesMatch);
         //Tempo
-        if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * 0.5) &&
-                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 0.5)) {
+        if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * 0.25) &&
+                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 0.25)) {
             audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.TEMPO_WEIGHT;
         } else if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * 1) &&
                 fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 1)) {
@@ -312,6 +317,7 @@ public class Fingerprint implements Serializable {
                 fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 2)) {
             audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.TEMPO_WEIGHT;
         }
+        System.out.println(audioFeaturesMatch);
         return audioFeaturesMatch;
     }
 
