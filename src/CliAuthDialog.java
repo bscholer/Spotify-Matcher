@@ -32,9 +32,10 @@ public class CliAuthDialog {
             try {
                 //Read refresh token from file
                 BufferedReader input = new BufferedReader(new FileReader(authFile));
-                String refresh;
-                while ((refresh = input.readLine()) != null) {
-
+                String refresh = "";
+                String test;
+                while ((test = input.readLine()) != null) {
+                    refresh += test;
                 }
                 input.close();
                 //Create spotifyApi

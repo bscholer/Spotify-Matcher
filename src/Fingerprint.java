@@ -66,7 +66,7 @@ public class Fingerprint implements Serializable {
         }
         Timer t = new Timer(true);
         //Hopefully a more efficient way of getting genres.
-        for (int i = 0; i < Shared.artists.size() / 50; i++) {
+        for (int i = 0; i <= Shared.artists.size() / 50; i++) {
             String ids[] = new String[Shared.artists.size() % 50];
             for (int j = 0; j < ids.length; j++) {
                 ids[j] = Shared.artists.get(j + (i * 50)).getId();
@@ -134,7 +134,7 @@ public class Fingerprint implements Serializable {
         t.reset();
         t.start();
         ArrayList<AudioFeatures> audioFeatures = new ArrayList<>();
-        for (int i = 0; i < tracks.size() / 100; i++) {
+        for (int i = 0; i <= tracks.size() / 100; i++) {
             String[] ids = new String[tracks.size() % 100];
             for (int j = 0; j < ids.length; j++) {
                 ids[j] = tracks.get(j + (i * 100)).getId();
@@ -222,100 +222,104 @@ public class Fingerprint implements Serializable {
      * @return
      */
     public static double findMatch(User user, Fingerprint fingerprintToMatch) {
-        final int HALF_STDEV_SCORE = 100;
-        final int ONE_STDEV_SCORE = 80;
-        final int ONE_AND_HALF_STDEV_SCORE = 65;
-        final int TWO_STDEV_SCORE = 40;
+        final int FIRST_STDEV_DIVISION_SCORE = 100;
+        final int SECOND_STDEV_DIVISION_SCORE = 95;
+        final int THIRD_STDEV_DIVISION_SCORE = 85;
+        final int FOURTH_STDEV_DIVISION_SCORE = 70;
+        final double FIRST_STDEV_DIVISION_SIZE = 0.125;
+        final double SECOND_STDEV_DIVISION_SIZE = 0.25;
+        final double THIRD_STDEV_DIVISION_SIZE = 0.75;
+        final double FOURTH_STDEV_DIVISION_SIZE = 1.5;
         double audioFeaturesMatch = 0;
         Fingerprint fingerprint = user.getFingerprint();
         //Danceability
-        if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * 0.25) &&
-                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 0.25)) {
-            audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.DANCEABILITY_WEIGHT;
-        } else if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * 1) &&
-                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 1)) {
-            audioFeaturesMatch += ONE_STDEV_SCORE * fingerprint.DANCEABILITY_WEIGHT;
-        } else if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * 1.5) &&
-                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 1.5)) {
-            audioFeaturesMatch += ONE_AND_HALF_STDEV_SCORE * fingerprint.DANCEABILITY_WEIGHT;
-        } else if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * 2) &&
-                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * 2)) {
-            audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.DANCEABILITY_WEIGHT;
+        if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * FIRST_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * FIRST_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FIRST_STDEV_DIVISION_SCORE * fingerprint.DANCEABILITY_WEIGHT;
+        } else if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * SECOND_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * SECOND_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += SECOND_STDEV_DIVISION_SCORE * fingerprint.DANCEABILITY_WEIGHT;
+        } else if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * THIRD_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * THIRD_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += THIRD_STDEV_DIVISION_SCORE * fingerprint.DANCEABILITY_WEIGHT;
+        } else if (fingerprintToMatch.getDanceabilityAvg() > (fingerprint.getDanceabilityAvg() - fingerprint.getDanceabilityStDev() * FOURTH_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getDanceabilityAvg() < (fingerprint.getDanceabilityAvg() + fingerprint.getDanceabilityStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.DANCEABILITY_WEIGHT;
         }
         System.out.println(audioFeaturesMatch);
         //Energy
-        if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * 0.25) &&
-                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 0.25)) {
-            audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.ENERGY_WEIGHT;
-        } else if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * 1) &&
-                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 1)) {
-            audioFeaturesMatch += ONE_STDEV_SCORE * fingerprint.ENERGY_WEIGHT;
-        } else if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * 1.5) &&
-                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 1.5)) {
-            audioFeaturesMatch += ONE_AND_HALF_STDEV_SCORE * fingerprint.ENERGY_WEIGHT;
-        } else if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * 2) &&
-                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * 2)) {
-            audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.ENERGY_WEIGHT;
+        if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * FIRST_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * FIRST_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FIRST_STDEV_DIVISION_SCORE * fingerprint.ENERGY_WEIGHT;
+        } else if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * SECOND_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * SECOND_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += SECOND_STDEV_DIVISION_SCORE * fingerprint.ENERGY_WEIGHT;
+        } else if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * THIRD_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * THIRD_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += THIRD_STDEV_DIVISION_SCORE * fingerprint.ENERGY_WEIGHT;
+        } else if (fingerprintToMatch.getEnergyAvg() > (fingerprint.getEnergyAvg() - fingerprint.getEnergyStDev() * FOURTH_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getEnergyAvg() < (fingerprint.getEnergyAvg() + fingerprint.getEnergyStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.ENERGY_WEIGHT;
         }
         System.out.println(audioFeaturesMatch);
         //Speechiness
-        if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * 0.25) &&
-                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 0.25)) {
-            audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.SPEECHINESS_WEIGHT;
-        } else if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * 1) &&
-                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 1)) {
-            audioFeaturesMatch += ONE_STDEV_SCORE * fingerprint.SPEECHINESS_WEIGHT;
-        } else if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * 1.5) &&
-                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 1.5)) {
-            audioFeaturesMatch += ONE_AND_HALF_STDEV_SCORE * fingerprint.SPEECHINESS_WEIGHT;
-        } else if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * 2) &&
-                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * 2)) {
-            audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.SPEECHINESS_WEIGHT;
+        if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * FIRST_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * FIRST_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FIRST_STDEV_DIVISION_SCORE * fingerprint.SPEECHINESS_WEIGHT;
+        } else if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * SECOND_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * SECOND_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += SECOND_STDEV_DIVISION_SCORE * fingerprint.SPEECHINESS_WEIGHT;
+        } else if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * THIRD_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * THIRD_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += THIRD_STDEV_DIVISION_SCORE * fingerprint.SPEECHINESS_WEIGHT;
+        } else if (fingerprintToMatch.getSpeechinessAvg() > (fingerprint.getSpeechinessAvg() - fingerprint.getSpeechinessStDev() * FOURTH_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getSpeechinessAvg() < (fingerprint.getSpeechinessAvg() + fingerprint.getSpeechinessStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.SPEECHINESS_WEIGHT;
         }
         System.out.println(audioFeaturesMatch);
         //Acousticness
-        if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * 0.25) &&
-                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 0.25)) {
-            audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
-        } else if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * 1) &&
-                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 1)) {
-            audioFeaturesMatch += ONE_STDEV_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
-        } else if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * 1.5) &&
-                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 1.5)) {
-            audioFeaturesMatch += ONE_AND_HALF_STDEV_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
-        } else if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * 2) &&
-                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * 2)) {
-            audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
+        if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * FIRST_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * FIRST_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FIRST_STDEV_DIVISION_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
+        } else if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * SECOND_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * SECOND_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += SECOND_STDEV_DIVISION_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
+        } else if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * THIRD_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * THIRD_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += THIRD_STDEV_DIVISION_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
+        } else if (fingerprintToMatch.getAcousticnessAvg() > (fingerprint.getAcousticnessAvg() - fingerprint.getAcousticnessStDev() * FOURTH_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getAcousticnessAvg() < (fingerprint.getAcousticnessAvg() + fingerprint.getAcousticnessStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.ACOUSTICNESS_WEIGHT;
         }
         System.out.println(audioFeaturesMatch);
         //Liveliness
-        if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * 0.25) &&
-                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 0.25)) {
-            audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.LIVELINESS_WEIGHT;
-        } else if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * 1) &&
-                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 1)) {
-            audioFeaturesMatch += ONE_STDEV_SCORE * fingerprint.LIVELINESS_WEIGHT;
-        } else if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * 1.5) &&
-                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 1.5)) {
-            audioFeaturesMatch += ONE_AND_HALF_STDEV_SCORE * fingerprint.LIVELINESS_WEIGHT;
-        } else if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * 2) &&
-                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * 2)) {
-            audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.LIVELINESS_WEIGHT;
+        if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * FIRST_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * FIRST_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FIRST_STDEV_DIVISION_SCORE * fingerprint.LIVELINESS_WEIGHT;
+        } else if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * SECOND_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * SECOND_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += SECOND_STDEV_DIVISION_SCORE * fingerprint.LIVELINESS_WEIGHT;
+        } else if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * THIRD_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * THIRD_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += THIRD_STDEV_DIVISION_SCORE * fingerprint.LIVELINESS_WEIGHT;
+        } else if (fingerprintToMatch.getLivelinessAvg() > (fingerprint.getLivelinessAvg() - fingerprint.getLivelinessStDev() * FOURTH_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getLivelinessAvg() < (fingerprint.getLivelinessAvg() + fingerprint.getLivelinessStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.LIVELINESS_WEIGHT;
         }
         System.out.println(audioFeaturesMatch);
         //Tempo
-        if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * 0.25) &&
-                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 0.25)) {
-            audioFeaturesMatch += HALF_STDEV_SCORE * fingerprint.TEMPO_WEIGHT;
-        } else if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * 1) &&
-                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 1)) {
-            audioFeaturesMatch += ONE_STDEV_SCORE * fingerprint.TEMPO_WEIGHT;
-        } else if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * 1.5) &&
-                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 1.5)) {
-            audioFeaturesMatch += ONE_AND_HALF_STDEV_SCORE * fingerprint.TEMPO_WEIGHT;
-        } else if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * 2) &&
-                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * 2)) {
-            audioFeaturesMatch += TWO_STDEV_SCORE * fingerprint.TEMPO_WEIGHT;
+        if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * FIRST_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * FIRST_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FIRST_STDEV_DIVISION_SCORE * fingerprint.TEMPO_WEIGHT;
+        } else if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * SECOND_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * SECOND_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += SECOND_STDEV_DIVISION_SCORE * fingerprint.TEMPO_WEIGHT;
+        } else if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * THIRD_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * THIRD_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += THIRD_STDEV_DIVISION_SCORE * fingerprint.TEMPO_WEIGHT;
+        } else if (fingerprintToMatch.getTempoAvg() > (fingerprint.getTempoAvg() - fingerprint.getTempoStDev() * FOURTH_STDEV_DIVISION_SIZE) &&
+                fingerprintToMatch.getTempoAvg() < (fingerprint.getTempoAvg() + fingerprint.getTempoStDev() * FOURTH_STDEV_DIVISION_SIZE)) {
+            audioFeaturesMatch += FOURTH_STDEV_DIVISION_SCORE * fingerprint.TEMPO_WEIGHT;
         }
         System.out.println(audioFeaturesMatch);
         return audioFeaturesMatch;
