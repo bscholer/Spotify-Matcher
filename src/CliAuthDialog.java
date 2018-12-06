@@ -5,10 +5,7 @@ import com.wrapper.spotify.requests.authorization.authorization_code.Authorizati
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URI;
 import java.util.Scanner;
 
@@ -34,9 +31,12 @@ public class CliAuthDialog {
             FileInputStream inputStream = null;
             try {
                 //Read refresh token from file
-                inputStream = new FileInputStream("auth");
-                String refresh = new String(inputStream.readAllBytes());
-                inputStream.close();
+                BufferedReader input = new BufferedReader(new FileReader(authFile));
+                String refresh;
+                while ((refresh = input.readLine()) != null) {
+
+                }
+                input.close();
                 //Create spotifyApi
                 spotifyApi = new SpotifyApi.Builder()
                         .setClientId(clientId)
