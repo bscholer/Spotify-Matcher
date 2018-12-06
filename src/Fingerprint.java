@@ -313,6 +313,13 @@ public class Fingerprint implements Serializable {
         double tier2Total = 0;
         double tier3Total = 0;
 
+        System.out.println("*****TIER1*****");
+        fingerprint.tier1Genres.forEach(System.out::println);
+        System.out.println("*****TIER2*****");
+        fingerprint.tier2Genres.forEach(System.out::println);
+        System.out.println("*****TIER3*****");
+        fingerprint.tier3Genres.forEach(System.out::println);
+
         for (String genre : fingerprint.tier1Genres) {
             if (fingerprintToMatch.tier1Genres.contains(genre)) {
                 tier1Total++;
@@ -334,6 +341,8 @@ public class Fingerprint implements Serializable {
         }
         genreMatch -= (1 - tier3Total / fingerprint.tier3Genres.size()) * fingerprint.TIER_3_DEDUCTION;
 
+        System.out.println("Audio features match: " + audioFeaturesMatch);
+        System.out.println("Genre match: " + genreMatch);
         return (audioFeaturesMatch * fingerprint.AUDIO_FEATURES_WEIGHT) + (genreMatch * fingerprint.GENRE_WEIGHT);
     }
 
