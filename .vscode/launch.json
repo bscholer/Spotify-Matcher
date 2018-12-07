@@ -2,6 +2,36 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Authentication",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "Authentication",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - UI",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "UI",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - NewFXMain",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "NewFXMain",
+            "args": ""
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Main",
             "request": "launch",
             "cwd": "${workspaceFolder}",
