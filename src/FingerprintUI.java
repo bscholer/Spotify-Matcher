@@ -1,6 +1,6 @@
 /**
  *
- * @author amukh
+ * @author Guardians of Java
  */
 public class FingerprintUI extends javax.swing.JFrame {
 
@@ -20,7 +20,6 @@ public class FingerprintUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        setTitle("Preference Selection");
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jBtnAdd = new javax.swing.JButton();
@@ -37,8 +36,18 @@ public class FingerprintUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jList1);
 
         jBtnAdd.setText("Add");
+        jBtnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAddActionPerformed(evt);
+            }
+        });
 
         jBtnNext.setText("Next");
+        jBtnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnNextActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Preference Matcher");
 
@@ -78,6 +87,14 @@ public class FingerprintUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>                        
+
+    private void jBtnAddActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        // TODO add your handling code here:
+    }                                       
+
+    private void jBtnNextActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+    }                                        
 
     /**
      * @param args the command line arguments
