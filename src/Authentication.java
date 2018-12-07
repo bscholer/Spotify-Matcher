@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.*;
+import java.*;
 /**
  *
  * @author Guardians of Java
@@ -24,10 +27,8 @@ public class Authentication extends javax.swing.JFrame {
     private void initComponents() {
 
         jBtnClickAuthenticate = new javax.swing.JButton();
-        jTxtCode = new javax.swing.JTextField();
         jLblIntro1 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jbtnAuth = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Welcome!");
@@ -42,14 +43,7 @@ public class Authentication extends javax.swing.JFrame {
 
         jLblIntro1.setText("Hi, thanks for using our product.");
 
-        jLabel1.setText("To get started click the button below to get your authentication code. Then paste that into the field below.");
-
-        jbtnAuth.setText("AUTHENTICATE");
-        jbtnAuth.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnAuthActionPerformed(evt);
-            }
-        });
+        jLabel1.setText("To get started click the button below to get your authentication code.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -60,18 +54,14 @@ public class Authentication extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLblIntro1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBtnClickAuthenticate, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(236, 236, 236))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jTxtCode, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbtnAuth, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))))
+                        .addComponent(jLabel1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(94, 94, 94)
+                .addComponent(jBtnClickAuthenticate, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,33 +69,48 @@ public class Authentication extends javax.swing.JFrame {
                 .addComponent(jLblIntro1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jBtnClickAuthenticate, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTxtCode, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbtnAuth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(32, 32, 32))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>                        
 
-    private void jBtnClickAuthenticateActionPerformed(java.awt.event.ActionEvent evt) {                                                      
-        // TODO add your handling code here:
-
-    }                                                     
-
-    private void jbtnAuthActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
+    private void jBtnClickAuthenticateActionPerformed(java.awt.event.ActionEvent evt) throws URISyntaxException{                                                      
+        URI uri = new URI ("https://www.cnn.com");
+        open (uri);
+        try {
+            uri = new URI("https://www.cnn.com");
+            System.out.println("URI parsed succesfully!");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+            
+    }                                                                                            
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws URISyntaxException {
 
-        final URI uri = new URI ("https://bscholer.github.io/spotify-redirect/index.html");
+    private static void open(URI uri) {
+        if (Desktop.isDesktopSupported()) {
+          try {
+            Desktop.getDesktop().browse(uri);
+          } catch (IOException e) {
+            java.util.logging.Logger.getLogger(Authentication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+          }
+        }
+      }
+    public static void main(String args[]){
+
+        // final URI uri = new URI ("https://bscholer.github.io/spotify-redirect/index.html");
+
+        // class jBtnClickAuthenticateActionPerformed implements ActionListener{
+        //     @Override public void actionPerformed(ActionEvent evt){
+        //         open(uri);
+        //     }
+        // }
 
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
