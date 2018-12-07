@@ -4,7 +4,6 @@ import com.wrapper.spotify.SpotifyHttpManager;
 import com.wrapper.spotify.enums.ModelObjectType;
 import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import com.wrapper.spotify.model_objects.special.SearchResult;
-import com.wrapper.spotify.model_objects.specification.Album;
 import com.wrapper.spotify.model_objects.specification.*;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
@@ -16,7 +15,7 @@ import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForSeveralTracks
 import com.wrapper.spotify.requests.data.tracks.GetAudioFeaturesForTrackRequest;
 
 import java.net.URI;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class ApiCalls {
     static PlaylistSimplified[] getUsersPlaylists(User user) {
@@ -33,7 +32,7 @@ public class ApiCalls {
         return null;
     }
 
-    static Album[] getUsersAlbums(User user) {
+    static com.wrapper.spotify.model_objects.specification.Album[] getUsersAlbums(User user) {
         GetCurrentUsersSavedAlbumsRequest getCurrentUsersSavedAlbumsRequest = user.getSpotifyApi()
                 .getCurrentUsersSavedAlbums()
                 .limit(50)
@@ -41,7 +40,8 @@ public class ApiCalls {
         try {
             Paging<SavedAlbum> savedAlbumPaging = getCurrentUsersSavedAlbumsRequest.execute();
             SavedAlbum[] savedAlbums = savedAlbumPaging.getItems();
-            Album[] albums = new Album[savedAlbumPaging.getTotal()];
+            com.wrapper.spotify.model_objects.specification.Album[] albums =
+                    new com.wrapper.spotify.model_objects.specification.Album[savedAlbumPaging.getTotal()];
             for (int i = 0; i < savedAlbums.length; i++) {
                 albums[i] = savedAlbums[i].getAlbum();
             }
@@ -76,49 +76,69 @@ public class ApiCalls {
         }
     }
 
-    static PlaylistSimplified[] searchForPlaylist(SpotifyApi spotifyApi, String query) {
-        SearchItemRequest searchItemRequest = spotifyApi
+    static ArrayList<Playlist> searchForPlaylist(User user, String query) {
+        SearchItemRequest searchItemRequest = user.getSpotifyApi()
                 .searchItem(query, ModelObjectType.PLAYLIST.getType())
                 .market(CountryCode.US)
                 .limit(10)
                 .build();
         try {
             SearchResult searchResult = searchItemRequest.execute();
-            return searchResult.getPlaylists().getItems();
+            PlaylistSimplified[] playlistSimplifieds = searchResult.getPlaylists().getItems();
+            ArrayList<Playlist> playlists = new ArrayList<>();
+            for (PlaylistSimplified playlist : playlistSimplifieds) {
+                playlists.add(new Playlist(playlist, user));
+            }
+            return playlists;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    static AlbumSimplified[] searchForAlbum(SpotifyApi spotifyApi, String query) {
-        SearchItemRequest searchItemRequest = spotifyApi
+    static ArrayList<Album> searchForAlbum(User user, String query) {
+        SearchItemRequest searchItemRequest = user.getSpotifyApi()
                 .searchItem(query, ModelObjectType.ALBUM.getType())
                 .market(CountryCode.US)
                 .limit(10)
                 .build();
         try {
             SearchResult searchResult = searchItemRequest.execute();
-            return searchResult.getAlbums().getItems();
+            AlbumSimplified[] albumSimplifieds = searchResult.getAlbums().getItems();
+            ArrayList<Album> albums = new ArrayList<>();
+            for (AlbumSimplified albumSimplified : albumSimplifieds) {
+                albums.add(new Album(albumSimplified));
+            }
+            return albums;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    static com.wrapper.spotify.model_objects.specification.Artist[] searchForArtist(SpotifyApi spotifyApi, String query) {
-        SearchItemRequest searchItemRequest = spotifyApi
+    static ArrayList<Artist> searchForArtist(User user, String query) {
+        SearchItemRequest searchItemRequest = user.getSpotifyApi()
                 .searchItem(query, ModelObjectType.ARTIST.getType())
                 .market(CountryCode.US)
                 .limit(10)
                 .build();
         try {
             SearchResult searchResult = searchItemRequest.execute();
-            return searchResult.getArtists().getItems();
+            com.wrapper.spotify.model_objects.specification.Artist[] spotifyArtists =
+                    searchResult.getArtists().getItems();
+            ArrayList<Artist> artists = new ArrayList<>();
+            for (com.wrapper.spotify.model_objects.specification.Artist artist : spotifyArtists) {
+                artists.add(new Artist(artist));
+            }
+            return artists;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    static ArrayList<Track> getArtistsTracks(Artist artist, User user) {
+
     }
 
     static SpotifyApi refreshAuthentication(String clientId, String clientSecret, String refreshToken) {

@@ -2,10 +2,7 @@ import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.SpotifyHttpManager;
 import com.wrapper.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.URI;
 
 /**
@@ -86,6 +83,8 @@ public class User implements Serializable {
                 FileInputStream inputStream = new FileInputStream(fileName);
                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                 user = (User) objectInputStream.readObject();
+                objectInputStream.close();
+                inputStream.close();
             } catch (Exception e) {
                 user = null;
                 new File(fileName).delete();
@@ -94,6 +93,27 @@ public class User implements Serializable {
             user = null;
         }
         return user;
+    }
+
+    /**
+     * Save the user's profile to the disk.
+     * @param user the user to serialize
+     * @param fileName the file to save object to.
+     * @return 0 for success, non-zero in case of an error.
+     */
+    public static int saveUser(User user, String fileName) {
+        //Serialize the user.
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(user);
+            objectOutputStream.close();
+            fileOutputStream.close();
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
     }
 
     @Override

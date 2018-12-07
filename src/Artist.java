@@ -1,10 +1,19 @@
 import com.wrapper.spotify.model_objects.specification.ArtistSimplified;
 import com.wrapper.spotify.requests.data.artists.GetArtistRequest;
 
+import java.util.ArrayList;
+
 public class Artist extends Item {
     private String[] genres;
+    private ArrayList<Track> tracks;
+    private ArrayList<Track> topTracks;
 
     public Artist(ArtistSimplified artist) {
+        super(artist.getName(), artist.getId(), artist.getUri());
+        Shared.artists.add(this);
+    }
+
+    public Artist(com.wrapper.spotify.model_objects.specification.Artist artist) {
         super(artist.getName(), artist.getId(), artist.getUri());
         Shared.artists.add(this);
     }
@@ -18,6 +27,14 @@ public class Artist extends Item {
             this.genres = matchedArtist.getGenres();
         } catch (Exception e) {
         }
+    }
+
+    public void findTopTracks(User user) {
+
+    }
+
+    public void findTracks(User user) {
+
     }
 
     public String[] getGenres() {
