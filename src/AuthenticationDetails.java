@@ -1,5 +1,3 @@
-import java.io.Serializable;
-
 /**
  * The AuthenticationDetails class is designed to be inherited, storing general authentication details for
  * APIs using OAuth 2.0. The main purpose of this class is being able to be Serialized, storing the refresh key data.
@@ -8,7 +6,7 @@ import java.io.Serializable;
  * @since 2018-10-26
  */
 
-public class AuthenticationDetails implements Serializable {
+public class AuthenticationDetails {
 
     protected String token;
     protected String refreshToken;
@@ -40,7 +38,7 @@ public class AuthenticationDetails implements Serializable {
     public int endSession() {
         this.token = null;
         this.expiryDate = null;
-        //TODO add serialization stuff
+        //TODO add saving
         return 0;
     }
 }
