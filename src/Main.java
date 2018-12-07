@@ -1,6 +1,3 @@
-import com.wrapper.spotify.model_objects.specification.AlbumSimplified;
-import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -55,9 +52,9 @@ public class Main {
                     System.out.print("Query: ");
                     Scanner scanner = new Scanner(System.in);
                     String query = scanner.nextLine();
-                    PlaylistSimplified[] playlistSimplifieds = ApiCalls.searchForPlaylist(user.getSpotifyApi(), query);
-                    AlbumSimplified[]
-                    //TODO add search functionality
+                    ArrayList<Playlist> playlists = new ArrayList<>();
+                    playlists.addAll(ApiCalls.searchForPlaylist(user, query));
+                    //TODO add albums and artist searching
                     break;
                 case 1:
                     user.setFingerprint(Fingerprint.createNewFingerprint(user));

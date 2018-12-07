@@ -8,6 +8,7 @@ import com.wrapper.spotify.model_objects.specification.*;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import com.wrapper.spotify.requests.data.artists.GetArtistsAlbumsRequest;
 import com.wrapper.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
 import com.wrapper.spotify.requests.data.playlists.GetListOfUsersPlaylistsRequest;
 import com.wrapper.spotify.requests.data.search.SearchItemRequest;
@@ -137,8 +138,28 @@ public class ApiCalls {
         return null;
     }
 
-    static ArrayList<Track> getArtistsTracks(Artist artist, User user) {
+    static ArrayList<Album> getArtistsAlbums(Artist artist, User user) {
+        GetArtistsAlbumsRequest getArtistsAlbumsRequest = user.getSpotifyApi()
+                .getArtistsAlbums(artist.getId())
+                .limit(50)
+                .build();
+        try {
+            AlbumSimplified[] albumSimplifieds = getArtistsAlbumsRequest.execute().getItems();
+            ArrayList<Album> albums = new ArrayList<>();
+            for (AlbumSimplified albumSimplified : albumSimplifieds) {
+                albums.add(new Album(albumSimplified));
+            }
+            return albums;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    static ArrayList<Track> getArtistsTracks(Artist artist, User user) {
+        return new ArrayList<>() {{
+            getArtistsAlbums(artist, user).forEach(album -> addAll(album.findTracks(user)));
+        }};
     }
 
     static SpotifyApi refreshAuthentication(String clientId, String clientSecret, String refreshToken) {

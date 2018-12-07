@@ -44,7 +44,7 @@ public class Album extends Item {
      *
      * @param user
      */
-    public void findTracks(User user) {
+    public ArrayList<Track> findTracks(User user) {
         this.tracks = new ArrayList<>();
         for (int i = 0; i < Math.ceil(this.length / 100.0); i++) {
             GetAlbumsTracksRequest getAlbumsTracksRequest = user.getSpotifyApi()
@@ -72,6 +72,7 @@ public class Album extends Item {
                 e.printStackTrace();
             }
         }
+        return this.tracks;
     }
 
     @Override
