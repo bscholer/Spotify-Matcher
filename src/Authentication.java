@@ -37,7 +37,11 @@ public class Authentication extends javax.swing.JFrame {
         jBtnClickAuthenticate.setText("Click Here!");
         jBtnClickAuthenticate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBtnClickAuthenticateActionPerformed(evt);
+                try {
+                    jBtnClickAuthenticateActionPerformed(evt);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -77,24 +81,34 @@ public class Authentication extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
-    private void jBtnClickAuthenticateActionPerformed(java.awt.event.ActionEvent evt) throws URISyntaxException{                                                      
-            
+    private void jBtnClickAuthenticateActionPerformed(java.awt.event.ActionEvent evt) throws URISyntaxException
+    {
+        String s = (String)JOptionPane.showInputDialog(getContentPane(), "Input Test", "Inputter", JOptionPane.PLAIN_MESSAGE, null, null, null);
+        if(s.equals("TEST"))
+        {
+            JOptionPane.showMessageDialog(getContentPane(), "Input Success");
+            FingerprintUI newMenu = new FingerprintUI();
+            newMenu.setVisible(true);
+            setVisible(false);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(getContentPane(), "Input Fail");
+        }
     }                                                                                            
 
     /**
      * @param args the command line arguments
      */
-
-    private static void open(URI uri) {
-        if (Desktop.isDesktopSupported()) {
-          try {
-            Desktop.getDesktop().browse(uri);
-          } catch (IOException e) {
-            java.util.logging.Logger.getLogger(Authentication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-          }
-        }
-      }
     public static void main(String args[]){
+
+        // final URI uri = new URI ("https://bscholer.github.io/spotify-redirect/index.html");
+
+        // class jBtnClickAuthenticateActionPerformed implements ActionListener{
+        //     @Override public void actionPerformed(ActionEvent evt){
+        //         open(uri);
+        //     }
+        // }
 
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
