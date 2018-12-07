@@ -23,11 +23,6 @@ public class Playlist extends Item {
         this.length = length;
     }
 
-    //TODO delete this if it doesn't need to be used
-    public Playlist(com.wrapper.spotify.model_objects.specification.Playlist playlist) {
-        super();
-    }
-
     public Playlist(PlaylistSimplified playlist, User user) {
         super();
         this.name = playlist.getName();

@@ -35,9 +35,9 @@ public class Main {
             System.exit(1);
         }
 
+        //TODO move this code somewhere else. It shouldn't really be here.
         //Generate the user's fingerprint
         if (user.getFingerprint() == null) {
-            System.out.println("Gathering your data...");
             PlaylistSimplified[] usersPlaylistSimps = ApiCalls.getUsersPlaylists(user);
             com.wrapper.spotify.model_objects.specification.Album[] usersSpotifyAlbums = ApiCalls.getUsersAlbums(user);
             //Prompt user to select playlists from their library

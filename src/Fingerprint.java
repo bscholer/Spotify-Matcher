@@ -102,7 +102,6 @@ public class Fingerprint implements Serializable {
                 }
             }
         }
-        //TODO make sorting better. It only seems to work on the first chunk of the map.
         this.genres.entrySet().stream()
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
                 .forEach(k -> {
