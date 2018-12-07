@@ -48,6 +48,7 @@ public class Fingerprint implements Serializable {
     private ArrayList<String> tier2Genres;
     private ArrayList<String> tier3Genres;
 
+
     public Fingerprint() {
     }
 
@@ -64,10 +65,10 @@ public class Fingerprint implements Serializable {
         }
         Timer t = new Timer(true);
         //Hopefully a more efficient way of getting genres.
-        for (int i = 0; i <= Shared.artists.size() / 50; i++) {
-            String ids[] = new String[Shared.artists.size() % 50];
+        for (int i = 0; i <= artists.size() / 50; i++) {
+            String ids[] = new String[artists.size() % 50];
             for (int j = 0; j < ids.length; j++) {
-                ids[j] = Shared.artists.get(j + (i * 50)).getId();
+                ids[j] = artists.get(j + (i * 50)).getId();
             }
             GetSeveralArtistsRequest getSeveralArtistsRequest = user.getSpotifyApi()
                     .getSeveralArtists(ids)
@@ -76,9 +77,19 @@ public class Fingerprint implements Serializable {
                 com.wrapper.spotify.model_objects.specification.Artist[] fullArtists = getSeveralArtistsRequest.execute();
                 for (int j = i * 50; j < ids.length + (i * 50); j++) {
                     for (com.wrapper.spotify.model_objects.specification.Artist artist : fullArtists) {
-                        if (artist == null || Shared.artists.get(j) == null) continue;
-                        if (Shared.artists.get(j).getUri().equals(artist.getUri())) {
-                            Shared.artists.get(j).setGenres(artist.getGenres());
+                        if (artist == null || artists.get(j) == null) continue;
+                        if (artists.get(j).getUri().equals(artist.getUri())) {
+                            artists.get(j).setGenres(artist.getGenres());
+                            String[] genresArr = artists.get(j).getGenres();
+                            if (genresArr == null || genresArr.length == 0) continue;
+                            for(String genre: genresArr)
+                            {
+                                if (this.genres.containsKey(genre)) {
+                                    this.genres.put(genre, this.genres.get(genre) + 1);
+                                } else {
+                                    this.genres.put(genre, 1);
+                                }
+                            }
                         }
                     }
                 }
@@ -91,7 +102,7 @@ public class Fingerprint implements Serializable {
             } catch (Exception e) {
             }
         }
-        for (Artist artist : Shared.artists) {
+        /*for (Artist artist : Shared.artists) {
             String[] genresArr = artist.getGenres();
             if (genresArr == null || genresArr.length == 0) continue;
             for (String genre : genresArr) {
@@ -102,6 +113,7 @@ public class Fingerprint implements Serializable {
                 }
             }
         }
+        */
         //TODO make sorting better. It only seems to work on the first chunk of the map.
         this.genres.entrySet().stream()
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
@@ -319,19 +331,28 @@ public class Fingerprint implements Serializable {
         fingerprint.tier2Genres.forEach(System.out::println);
         System.out.println("*****TIER3*****");
         fingerprint.tier3Genres.forEach(System.out::println);
-
+        System.out.println("*****TIER1 COMPARE*****");
+        fingerprintToMatch.tier1Genres.forEach(System.out::println);
+        System.out.println("*****TIER2 COMPARE*****");
+        fingerprintToMatch.tier2Genres.forEach(System.out::println);
+        System.out.println("*****TIER3 COMPARE*****");
+        fingerprintToMatch.tier3Genres.forEach(System.out::println);
         for (String genre : fingerprint.tier1Genres) {
             if (fingerprintToMatch.tier1Genres.contains(genre)) {
                 tier1Total++;
+
             }
         }
+        System.out.println(tier1Total);
         genreMatch -= (1 - tier1Total / fingerprint.tier1Genres.size()) * fingerprint.TIER_1_DEDUCTION;
 
         for (String genre : fingerprint.tier2Genres) {
+
             if (fingerprintToMatch.tier2Genres.contains(genre)) {
                 tier2Total++;
             }
         }
+        System.out.println(tier2Total);
         genreMatch -= (1 - tier2Total / fingerprint.tier2Genres.size()) * fingerprint.TIER_2_DEDUCTION;
 
         for (String genre : fingerprint.tier3Genres) {
@@ -339,6 +360,7 @@ public class Fingerprint implements Serializable {
                 tier3Total++;
             }
         }
+        System.out.println(tier3Total);
         genreMatch -= (1 - tier3Total / fingerprint.tier3Genres.size()) * fingerprint.TIER_3_DEDUCTION;
 
         System.out.println("Audio features match: " + audioFeaturesMatch);
