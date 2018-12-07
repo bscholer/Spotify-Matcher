@@ -1,6 +1,6 @@
 /**
  *
- * @author amukh
+ * @author Guardians of Java
  */
 public class Authentication extends javax.swing.JFrame {
 
@@ -42,6 +42,11 @@ public class Authentication extends javax.swing.JFrame {
         jLabel1.setText("To get started click the button below to get your authentication code. Then paste that into the field below.");
 
         jbtnAuth.setText("AUTHENTICATE");
+        jbtnAuth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnAuthActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,6 +91,10 @@ public class Authentication extends javax.swing.JFrame {
     private void jBtnClickAuthenticateActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         // TODO add your handling code here:
     }                                                     
+
+    private void jbtnAuthActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+    }                                        
 
     /**
      * @param args the command line arguments

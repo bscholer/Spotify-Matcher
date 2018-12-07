@@ -1,6 +1,6 @@
 /**
  *
- * @author amukh
+ * @author Guardians of Java
  */
 public class UI extends javax.swing.JFrame {
 
@@ -33,6 +33,11 @@ public class UI extends javax.swing.JFrame {
         jlblSearch.setText("Search");
 
         jbtnEnter.setText("Enter");
+        jbtnEnter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnEnterActionPerformed(evt);
+            }
+        });
 
         jLblYourMusic.setText("Your Music");
 
@@ -69,15 +74,14 @@ public class UI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLblAvgScores)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLblYourMusic)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jlblSearch)
-                            .addGap(18, 18, 18)
-                            .addComponent(jtxtSearchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jbtnEnter))))
+                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLblYourMusic)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jlblSearch)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtxtSearchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbtnEnter)))
                 .addContainerGap(66, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -101,6 +105,10 @@ public class UI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>                        
+
+    private void jbtnEnterActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
 
     /**
      * @param args the command line arguments
