@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.util.*;
+import java.net.*;
 /**
  *
  * @author Guardians of Java
@@ -90,6 +93,7 @@ public class Authentication extends javax.swing.JFrame {
 
     private void jBtnClickAuthenticateActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         // TODO add your handling code here:
+
     }                                                     
 
     private void jbtnAuthActionPerformed(java.awt.event.ActionEvent evt) {                                         
@@ -99,12 +103,10 @@ public class Authentication extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+    public static void main(String args[]) throws URISyntaxException {
+
+        final URI uri = new URI ("https://bscholer.github.io/spotify-redirect/index.html");
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -136,6 +138,5 @@ public class Authentication extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLblIntro1;
     private javax.swing.JTextField jTxtCode;
-    private javax.swing.JButton jbtnAuth;
     // End of variables declaration                   
 }
