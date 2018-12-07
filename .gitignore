@@ -1,2 +1,10 @@
 
 \.idea/
+
+*.class
+
+out/production/SpotifyMatcher/
+
+*.iml
+
+auth
