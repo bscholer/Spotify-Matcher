@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 /**
  *
  * @author ibrabelware
+ * @author Guardians of Java
  */
 public class AuthTest extends JFrame {
     private JPanel pan;
